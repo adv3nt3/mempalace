@@ -84,7 +84,7 @@ class MempalaceConfig:
 
         if self._config_file.exists():
             try:
-                with open(self._config_file, "r") as f:
+                with open(self._config_file) as f:
                     self._file_config = json.load(f)
             except (json.JSONDecodeError, OSError):
                 self._file_config = {}
@@ -107,7 +107,7 @@ class MempalaceConfig:
         """Mapping of name variants to canonical names."""
         if self._people_map_file.exists():
             try:
-                with open(self._people_map_file, "r") as f:
+                with open(self._people_map_file) as f:
                     return json.load(f)
             except (json.JSONDecodeError, OSError):
                 pass
