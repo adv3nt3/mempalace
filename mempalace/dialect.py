@@ -311,7 +311,9 @@ class Dialect:
         dialect.generate_layer1("zettels/", output="LAYER1.aaak")
     """
 
-    def __init__(self, entities: Dict[str, str] = None, skip_names: List[str] = None):
+    def __init__(
+        self, entities: Optional[Dict[str, str]] = None, skip_names: Optional[List[str]] = None
+    ):
         """
         Args:
             entities: Mapping of full names -> short codes.
@@ -536,7 +538,7 @@ class Dialect:
                     break
         return found
 
-    def compress(self, text: str, metadata: dict = None) -> str:
+    def compress(self, text: str, metadata: Optional[dict] = None) -> str:
         """
         Compress plain text into AAAK Dialect format.
 
@@ -752,7 +754,7 @@ class Dialect:
 
     # === FILE-BASED COMPRESSION ===
 
-    def compress_file(self, zettel_json_path: str, output_path: str = None) -> str:
+    def compress_file(self, zettel_json_path: str, output_path: Optional[str] = None) -> str:
         """Read a zettel JSON file and compress it to AAAK Dialect."""
         with open(zettel_json_path, "r") as f:
             data = json.load(f)
@@ -762,7 +764,7 @@ class Dialect:
                 f.write(dialect)
         return dialect
 
-    def compress_all(self, zettel_dir: str, output_path: str = None) -> str:
+    def compress_all(self, zettel_dir: str, output_path: Optional[str] = None) -> str:
         """Compress ALL zettel files into a single AAAK Dialect file."""
         all_dialect = []
         for fname in sorted(os.listdir(zettel_dir)):
@@ -784,8 +786,8 @@ class Dialect:
     def generate_layer1(
         self,
         zettel_dir: str,
-        output_path: str = None,
-        identity_sections: Dict[str, List[str]] = None,
+        output_path: Optional[str] = None,
+        identity_sections: Optional[Dict[str, List[str]]] = None,
         weight_threshold: float = 0.85,
     ) -> str:
         """

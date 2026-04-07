@@ -16,12 +16,14 @@ No external graph DB needed — built from ChromaDB metadata.
 """
 
 from collections import defaultdict, Counter
+from typing import Optional
+
 from .config import MempalaceConfig
 
 import chromadb
 
 
-def _get_collection(config=None):
+def _get_collection(config: Optional[MempalaceConfig] = None):
     config = config or MempalaceConfig()
     try:
         client = chromadb.PersistentClient(path=config.palace_path)
@@ -96,7 +98,9 @@ def build_graph(col=None, config=None):
     return nodes, edges
 
 
-def traverse(start_room: str, col=None, config=None, max_hops: int = 2):
+def traverse(
+    start_room: str, col=None, config: Optional[MempalaceConfig] = None, max_hops: int = 2
+):
     """
     Walk the graph from a starting room. Find connected rooms
     through shared wings.
@@ -158,7 +162,12 @@ def traverse(start_room: str, col=None, config=None, max_hops: int = 2):
     return results[:50]  # cap results
 
 
-def find_tunnels(wing_a: str = None, wing_b: str = None, col=None, config=None):
+def find_tunnels(
+    wing_a: Optional[str] = None,
+    wing_b: Optional[str] = None,
+    col=None,
+    config: Optional[MempalaceConfig] = None,
+):
     """
     Find rooms that connect two wings (or all tunnel rooms if no wings specified).
     These are the "hallways" — same named idea appearing in multiple domains.

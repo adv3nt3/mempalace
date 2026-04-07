@@ -14,6 +14,8 @@ from pathlib import Path
 from datetime import datetime
 from collections import defaultdict
 
+from typing import Optional
+
 import chromadb
 
 READABLE_EXTENSIONS = {
@@ -315,7 +317,7 @@ def scan_project(project_dir: str) -> list:
 def mine(
     project_dir: str,
     palace_path: str,
-    wing_override: str = None,
+    wing_override: Optional[str] = None,
     agent: str = "mempalace",
     limit: int = 0,
     dry_run: bool = False,

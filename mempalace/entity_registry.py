@@ -345,7 +345,7 @@ class EntityRegistry:
 
     # ── Seed from onboarding ─────────────────────────────────────────────────
 
-    def seed(self, mode: str, people: list, projects: list, aliases: dict = None):
+    def seed(self, mode: str, people: list, projects: list, aliases: Optional[dict] = None):
         """
         Seed the registry from onboarding data.
 

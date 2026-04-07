@@ -9,10 +9,18 @@ Returns verbatim text — the actual words, never summaries.
 import sys
 from pathlib import Path
 
+from typing import Optional
+
 import chromadb
 
 
-def search(query: str, palace_path: str, wing: str = None, room: str = None, n_results: int = 5):
+def search(
+    query: str,
+    palace_path: str,
+    wing: Optional[str] = None,
+    room: Optional[str] = None,
+    n_results: int = 5,
+):
     """
     Search the palace. Returns verbatim drawer content.
     Optionally filter by wing (project) or room (aspect).
@@ -85,7 +93,11 @@ def search(query: str, palace_path: str, wing: str = None, room: str = None, n_r
 
 
 def search_memories(
-    query: str, palace_path: str, wing: str = None, room: str = None, n_results: int = 5
+    query: str,
+    palace_path: str,
+    wing: Optional[str] = None,
+    room: Optional[str] = None,
+    n_results: int = 5,
 ) -> dict:
     """
     Programmatic search — returns a dict instead of printing.

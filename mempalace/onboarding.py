@@ -17,6 +17,8 @@ Usage:
 """
 
 from pathlib import Path
+from typing import Optional
+
 from mempalace.entity_registry import EntityRegistry
 from mempalace.entity_detector import detect_entities, scan_for_detection
 
@@ -264,7 +266,7 @@ def _warn_ambiguous(people: list) -> list:
 
 
 def _generate_aaak_bootstrap(
-    people: list, projects: list, wings: list, mode: str, config_dir: Path = None
+    people: list, projects: list, wings: list, mode: str, config_dir: Optional[Path] = None
 ):
     """
     Generate AAAK entity registry + critical facts bootstrap from onboarding data.
@@ -364,7 +366,7 @@ def _generate_aaak_bootstrap(
 
 def run_onboarding(
     directory: str = ".",
-    config_dir: Path = None,
+    config_dir: Optional[Path] = None,
     auto_detect: bool = True,
 ) -> EntityRegistry:
     """
@@ -458,9 +460,9 @@ def run_onboarding(
 def quick_setup(
     mode: str,
     people: list,
-    projects: list = None,
-    aliases: dict = None,
-    config_dir: Path = None,
+    projects: Optional[list] = None,
+    aliases: Optional[dict] = None,
+    config_dir: Optional[Path] = None,
 ) -> EntityRegistry:
     """
     Programmatic setup without interactive prompts.

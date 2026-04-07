@@ -17,6 +17,8 @@ from collections import defaultdict
 
 import chromadb
 
+from typing import Optional
+
 from .normalize import normalize
 
 
@@ -252,7 +254,7 @@ def scan_convos(convo_dir: str) -> list:
 def mine_convos(
     convo_dir: str,
     palace_path: str,
-    wing: str = None,
+    wing: Optional[str] = None,
     agent: str = "mempalace",
     limit: int = 0,
     dry_run: bool = False,

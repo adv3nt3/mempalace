@@ -41,13 +41,14 @@ import os
 import sqlite3
 from datetime import date, datetime
 from pathlib import Path
+from typing import Optional
 
 
 DEFAULT_KG_PATH = os.path.expanduser("~/.mempalace/knowledge_graph.sqlite3")
 
 
 class KnowledgeGraph:
-    def __init__(self, db_path: str = None):
+    def __init__(self, db_path: Optional[str] = None):
         self.db_path = db_path or DEFAULT_KG_PATH
         Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
         self._init_db()
@@ -94,7 +95,9 @@ class KnowledgeGraph:
 
     # ── Write operations ──────────────────────────────────────────────────
 
-    def add_entity(self, name: str, entity_type: str = "unknown", properties: dict = None):
+    def add_entity(
+        self, name: str, entity_type: str = "unknown", properties: Optional[dict] = None
+    ):
         """Add or update an entity node."""
         eid = self._entity_id(name)
         props = json.dumps(properties or {})
@@ -112,11 +115,11 @@ class KnowledgeGraph:
         subject: str,
         predicate: str,
         obj: str,
-        valid_from: str = None,
-        valid_to: str = None,
+        valid_from: Optional[str] = None,
+        valid_to: Optional[str] = None,
         confidence: float = 1.0,
-        source_closet: str = None,
-        source_file: str = None,
+        source_closet: Optional[str] = None,
+        source_file: Optional[str] = None,
     ):
         """
         Add a relationship triple: subject → predicate → object.
@@ -166,7 +169,7 @@ class KnowledgeGraph:
         conn.close()
         return triple_id
 
-    def invalidate(self, subject: str, predicate: str, obj: str, ended: str = None):
+    def invalidate(self, subject: str, predicate: str, obj: str, ended: Optional[str] = None):
         """Mark a relationship as no longer valid (set valid_to date)."""
         sub_id = self._entity_id(subject)
         obj_id = self._entity_id(obj)
@@ -183,7 +186,7 @@ class KnowledgeGraph:
 
     # ── Query operations ──────────────────────────────────────────────────
 
-    def query_entity(self, name: str, as_of: str = None, direction: str = "outgoing"):
+    def query_entity(self, name: str, as_of: Optional[str] = None, direction: str = "outgoing"):
         """
         Get all relationships for an entity.
 
@@ -240,7 +243,7 @@ class KnowledgeGraph:
         conn.close()
         return results
 
-    def query_relationship(self, predicate: str, as_of: str = None):
+    def query_relationship(self, predicate: str, as_of: Optional[str] = None):
         """Get all triples with a given relationship type."""
         pred = predicate.lower().replace(" ", "_")
         conn = self._conn()
@@ -271,7 +274,7 @@ class KnowledgeGraph:
         conn.close()
         return results
 
-    def timeline(self, entity_name: str = None):
+    def timeline(self, entity_name: Optional[str] = None):
         """Get all facts in chronological order, optionally filtered by entity."""
         conn = self._conn()
         if entity_name:

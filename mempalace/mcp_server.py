@@ -28,6 +28,8 @@ from .searcher import search_memories
 from .palace_graph import traverse, find_tunnels, graph_stats
 import chromadb
 
+from typing import Optional
+
 from .knowledge_graph import KnowledgeGraph
 
 _kg = KnowledgeGraph()
@@ -134,7 +136,7 @@ def tool_list_wings():
     return {"wings": wings}
 
 
-def tool_list_rooms(wing: str = None):
+def tool_list_rooms(wing: Optional[str] = None):
     col = _get_collection()
     if not col:
         return _no_palace()
@@ -170,7 +172,7 @@ def tool_get_taxonomy():
     return {"taxonomy": taxonomy}
 
 
-def tool_search(query: str, limit: int = 5, wing: str = None, room: str = None):
+def tool_search(query: str, limit: int = 5, wing: Optional[str] = None, room: Optional[str] = None):
     return search_memories(
         query,
         palace_path=_config.palace_path,
@@ -228,7 +230,7 @@ def tool_traverse_graph(start_room: str, max_hops: int = 2):
     return traverse(start_room, col=col, max_hops=max_hops)
 
 
-def tool_find_tunnels(wing_a: str = None, wing_b: str = None):
+def tool_find_tunnels(wing_a: Optional[str] = None, wing_b: Optional[str] = None):
     """Find rooms that bridge two wings — the hallways connecting domains."""
     col = _get_collection()
     if not col:
@@ -248,7 +250,7 @@ def tool_graph_stats():
 
 
 def tool_add_drawer(
-    wing: str, room: str, content: str, source_file: str = None, added_by: str = "mcp"
+    wing: str, room: str, content: str, source_file: Optional[str] = None, added_by: str = "mcp"
 ):
     """File verbatim content into a wing/room. Checks for duplicates first."""
     col = _get_collection(create=True)
@@ -306,14 +308,18 @@ def tool_delete_drawer(drawer_id: str):
 # ==================== KNOWLEDGE GRAPH ====================
 
 
-def tool_kg_query(entity: str, as_of: str = None, direction: str = "both"):
+def tool_kg_query(entity: str, as_of: Optional[str] = None, direction: str = "both"):
     """Query the knowledge graph for an entity's relationships."""
     results = _kg.query_entity(entity, as_of=as_of, direction=direction)
     return {"entity": entity, "as_of": as_of, "facts": results, "count": len(results)}
 
 
 def tool_kg_add(
-    subject: str, predicate: str, object: str, valid_from: str = None, source_closet: str = None
+    subject: str,
+    predicate: str,
+    object: str,
+    valid_from: Optional[str] = None,
+    source_closet: Optional[str] = None,
 ):
     """Add a relationship to the knowledge graph."""
     triple_id = _kg.add_triple(
@@ -322,7 +328,7 @@ def tool_kg_add(
     return {"success": True, "triple_id": triple_id, "fact": f"{subject} → {predicate} → {object}"}
 
 
-def tool_kg_invalidate(subject: str, predicate: str, object: str, ended: str = None):
+def tool_kg_invalidate(subject: str, predicate: str, object: str, ended: Optional[str] = None):
     """Mark a fact as no longer true (set end date)."""
     _kg.invalidate(subject, predicate, object, ended=ended)
     return {
@@ -332,7 +338,7 @@ def tool_kg_invalidate(subject: str, predicate: str, object: str, ended: str = N
     }
 
 
-def tool_kg_timeline(entity: str = None):
+def tool_kg_timeline(entity: Optional[str] = None):
     """Get chronological timeline of facts, optionally for one entity."""
     results = _kg.timeline(entity)
     return {"entity": entity or "all", "timeline": results, "count": len(results)}
