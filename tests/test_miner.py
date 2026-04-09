@@ -310,3 +310,36 @@ def test_process_file_returns_room():
         assert room is None
     finally:
         shutil.rmtree(tmpdir, ignore_errors=True)
+
+
+def test_mine_dry_run_skips_tiny_files():
+    """mine() in dry-run mode doesn't crash when files return 0 drawers."""
+    tmpdir = tempfile.mkdtemp()
+    try:
+        project_root = Path(tmpdir).resolve()
+
+        write_file(
+            project_root / "backend" / "app.py", "def main():\n    print('hello world')\n" * 20
+        )
+        write_file(project_root / "tiny.py", "x = 1")
+
+        with open(project_root / "mempalace.yaml", "w") as f:
+            yaml.dump(
+                {
+                    "wing": "test_project",
+                    "rooms": [
+                        {"name": "backend", "description": "Backend code"},
+                        {"name": "general", "description": "General"},
+                    ],
+                },
+                f,
+            )
+
+        # Should not raise TypeError on room_counts[None]
+        mine(
+            project_dir=str(project_root),
+            palace_path=str(project_root / "palace"),
+            dry_run=True,
+        )
+    finally:
+        shutil.rmtree(tmpdir, ignore_errors=True)

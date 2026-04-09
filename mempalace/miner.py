@@ -588,8 +588,7 @@ def mine(
             dry_run=dry_run,
         )
         if drawers == 0:
-            if not dry_run:
-                files_skipped += 1
+            files_skipped += 1
         else:
             total_drawers += drawers
             room_counts[room] += 1
